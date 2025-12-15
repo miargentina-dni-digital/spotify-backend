@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Stats</title>
+</head>
+<body>
+
+  <h1>Mis estadísticas</h1>
+
+  <h2>Resumen semanal</h2>
+
+  <div id="top-track"></div>
+  <div id="top-artist"></div>
+  <div id="now-playing"></div>
+
+  <hr>
+
+  <h2>JSON completo</h2>
+  <pre id="full-json"></pre>
+
+  <script>
+    async function loadStats() {
+  try {
+    const res = await fetch("/me/stats");
+    const data = await res.json();
+
+    const topTrackDiv = document.getElementById("top-track");
+    const topArtistDiv = document.getElementById("top-artist");
+    const nowPlayingDiv = document.getElementById("now-playing");
+    const fullJsonDiv = document.getElementById("full-json");
+
+    // 1️⃣ Canción más escuchada
+    if (data.topTrack) {
+      topTrackDiv.innerHTML = `
+        <h3>Canción más escuchada</h3>
+        <p><strong>${data.topTrack.name}</strong> - ${data.topTrack.artists[0].name}</p>
+        <img src="${data.topTrack.album.images[0].url}" width="120">
+      `;
+    }
+
+    // 2️⃣ Artista más escuchado
+    if (data.topArtist) {
+      topArtistDiv.innerHTML = `
+        <h3>Artista más escuchado</h3>
+        <p><strong>${data.topArtist.name}</strong></p>
+        <img src="${data.topArtist.images[0]?.url}" width="120">
+      `;
+    }
+
+    // 3️⃣ Reproduciendo ahora
+    if (data.nowPlaying && data.nowPlaying.is_playing) {
+      nowPlayingDiv.innerHTML = `
+        <h3>Reproduciendo ahora</h3>
+        <p><strong>${data.nowPlaying.item.name}</strong> - ${data.nowPlaying.item.artists[0].name}</p>
+        <img src="${data.nowPlaying.item.album.images[0].url}" width="120">
+      `;
+    } else {
+      nowPlayingDiv.innerHTML = `
+        <h3>Reproduciendo ahora</h3>
+        <p>No hay ninguna canción sonando.</p>
+      `;
+    }
+
+    // 4️⃣ JSON completo
+    fullJsonDiv.textContent = JSON.stringify(data.fullStats, null, 2);
+
+  } catch (err) {
+    console.error("Error cargando stats:", err);
+  }
+}
+
+loadStats();
+
+  </script>
+
+</body>
+</html>

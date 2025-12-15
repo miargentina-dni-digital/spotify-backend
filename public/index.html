@@ -1,0 +1,15 @@
+<button onclick="connect()">Conectar Spotify</button>
+
+<script>
+function connect() {
+    const clientId = "ca9e8ebce3b64a469986892b23fc933a";
+    const redirectUri = "https://pluteal-nontubercularly-zella.ngrok-free.dev/callback";
+    const scope = "user-read-recently-played";
+
+    const url = 
+    `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+
+    window.location.href = "https://pluteal-nontubercularly-zella.ngrok-free.dev/login";
+
+}
+</script>
